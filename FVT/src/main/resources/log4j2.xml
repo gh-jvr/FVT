@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+	<Properties>
+		<Property name="logPath">/PATH/WHERE/STORE/LOGS
+		</Property>
+	</Properties>
+
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout
+				pattern="%d{HH:mm:ss.SSS} 
+	[%t] %-5level %logger{36} - %msg%n" />
+		</Console>
+		<RollingFile name="generalLog"
+			fileName="${logPath}/Fvt_log.log" append="false"
+			filePattern="${logPath}/${date:yyyy-MM}/Fvt_log-%i.log">
+			<PatternLayout
+				pattern="[%-5level] 
+	%d{yyyy-MM-dd HH:mm:ss.SSS} %C{3}.%M(line %L) - %msg%n" />
+			<Policies>
+				<SizeBasedTriggeringPolicy size="1024 MB" />
+			</Policies>
+		</RollingFile>
+	</Appenders>
+	<Loggers>
+		<Logger name="org.utils.App" level="all" additivity="false">
+			<appender-ref ref="generalLog" level="all" />
+		</Logger>
+		<Root level="all" additivity="false">
+			<AppenderRef ref="generalLog" />
+		</Root>
+	</Loggers>
+</Configuration>

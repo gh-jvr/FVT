@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{default}">
+<head>
+<title th:text="#{title.home}"></title>
+</head>
+<body>
+	<div layout:fragment="content">
+		<div class="container-flex">
+			<ul class="list-inline p-2">
+
+				<!-- Question 1 -->
+				<li class="font-weight-bold h3 list-inline-item text-justify"
+					th:text="#{extrainfo.question.1}"></li>
+				<li class="list-inline-item text-justify h6"
+					th:text="#{extrainfo.response.1}"></li>
+
+				<!-- Question 2 -->
+				<li class="font-weight-bold h3 list-inline-item text-justify mt-4"
+					th:text="#{extrainfo.question.2}"></li>
+				<li class="list-inline-item text-justify h6"
+					th:text="#{extrainfo.response.2}"></li>
+
+				<!-- Question 3 -->
+				<li class="font-weight-bold h3 list-inline-item text-justify mt-4"
+					th:text="#{extrainfo.question.3}"></li>
+				<li class="list-inline-item text-justify h6"
+					th:text="#{extrainfo.response.3}"></li>
+
+				<!-- Question 4 -->
+				<li class="font-weight-bold h3 list-inline-item text-justify mt-4"
+					th:text="#{extrainfo.question.4}"></li>
+				<li class="list-inline-item text-justify h6"
+					th:text="#{extrainfo.response.4}"></li>
+
+				<!-- Question 5 -->
+				<li class="font-weight-bold h3 list-inline-item text-justify mt-4"
+					th:text="#{extrainfo.question.5}"></li>
+				<li class="list-inline-item text-justify h6"
+					th:text="#{extrainfo.response.5}"></li>
+			</ul>
+		</div>
+	</div>
+</body>
+</html>

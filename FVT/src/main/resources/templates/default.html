@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<title layout:title-pattern="$CONTENT_TITLE"></title>
+<meta name="description" content="" />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
+<link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+	<div class="container-fluid p-0 h-100">
+		<div class="container-fluid p-0 mb-3 fixed-top">
+			<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+				<div class="container-fluid">
+					<a class="navbar-brand" href="/home"> <img
+						th:src="@{/images/fvt/fvt_64px.png}" height="40px" width="40px" />
+					</a>
+					<button class="navbar-toggler" type="button" data-toggle="collapse"
+						data-target="#navbarSupportedContent"
+						aria-controls="navbarSupportedContent" aria-expanded="false"
+						aria-label="Toggle navigation">
+						<span class="navbar-toggler-icon"></span>
+					</button>
+
+					<div class="collapse navbar-collapse" id="navbarSupportedContent">
+						<ul class="navbar-nav justify-content-left">
+							<li class="nav-item active"><a class="nav-link"
+								href="/dashboard" th:text="#{navBar.dashboard}"><span
+									class="sr-only">(current)</span> </a></li>
+						</ul>
+						<ul class="navbar-nav justify-content-left">
+							<li class="nav-item active"><a class="nav-link"
+								href="/tracking" th:text="#{navBar.trackings}"> <span
+									class="sr-only">(current)</span>
+							</a></li>
+						</ul>
+						<ul class="navbar-nav justify-content-left">
+							<li class="nav-item active"><a class="nav-link"
+								href="/vulnerability" th:text="#{navBar.vulnerabilities}"> <span
+									class="sr-only">(current)</span>
+							</a></li>
+						</ul>
+						<ul class="navbar-nav ml-auto">
+							<li class="nav-item" th:if="${currentUser == null}"><a
+								class="nav-link" th:href="@{/login}" th:text="#{navBar.login}"></a></li>
+							<li class="nav-item row" th:if="${currentUser}">
+								<!-- notification icon -->
+								<div class="p-0">
+									<a class="mr-4" href="/notification"> <span
+										data-toggle="tooltip" data-placement="bottom"
+										th:attr="title=#{tooltip.notifications}">
+											<button type="button"
+												class="btn btn-link opacity9 nounderline">
+												<img th:src="@{/images/notify_64px.png}" height="25px"
+													width="25px" /> <span th:if="${thereAreNotifications}"
+													class="badge badge-danger notify-badge">!</span>
+											</button>
+									</span>
+									</a>
+								</div> <!-- user button -->
+								<div class="btn-group dropdown" role="group">
+									<button type="button" class="btn btn-light dropdown-toggle"
+										data-toggle="dropdown" aria-haspopup="true"
+										aria-expanded="false" th:text="${fullName}"></button>
+									<div class="dropdown-menu dropdown-menu-right"
+										aria-labelledby="dropdownMenuButton"
+										style="width: 100%; text-align: center">
+										<a class="dropdown-item" href="/setting"
+											th:text="#{navBar.settings}"></a>
+										<div class="text-align:center"></div>
+										<form th:action="@{/logout}" method="post"
+											style="text-align: center">
+											<button type="submit" class="btn btn-outline-danger"
+												th:text="#{navBar.signout}"></button>
+										</form>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</nav>
+		</div>
+		<div class="container-fluid main-container">
+			<!-- Scripts -->
+			<script type="text/javascript" th:src="@{js/hideAlert.js}"></script>
+			<!-- alerts container -->
+			<div class="col-4 alert-popup-right">
+				<!-- Error messages container -->
+				<div th:if="${errors != null}" th:each="error: ${errors}">
+					<div class="container">
+						<div class="alert alert-danger mb-2">
+							<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+							<div th:text="${error.defaultMessage}"></div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Infos messages container -->
+				<div th:if="${infos != null}" th:each="info: ${infos}">
+					<div class="container">
+						<div class="alert alert-info mb-2" role="alert">
+							<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+							<div th:text="${info}"></div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Problems messages container -->
+				<div th:if="${problems != null}" th:each="problem: ${problems}">
+					<div class="container">
+						<div class="alert alert-danger mb-2" role="alert">
+							<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+							<div th:text="${problem}"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="defaultLayout" layout:fragment="content"></div>
+		</div>
+	</div>
+
+	<!-- Footer -->
+	<div class="footer fixed-bottom">
+
+		<!-- Language and copyright footer -->
+		<div class="container-flex right-align pr-2">
+
+			<a th:href="@{/copyright}" class="nounderline mr-4"> <img
+				th:src="@{/images/copyright_32px.png}" data-toggle="tooltip"
+				data-placement="right" th:attr="title=#{tooltip.copyright}"
+				width="20" height="20" />
+			</a> <a th:href="@{?lang=en}" class="nounderline"> <img class="ml-2"
+				th:src="@{/images/languages/english_64px.png}" data-toggle="tooltip"
+				data-placement="right" th:attr="title=#{tooltip.language.english}"
+				width="25" height="25" />
+			</a> <a th:href="@{?lang=es}" class="nounderline"> <img class="ml-2"
+				th:src="@{/images/languages/spanish_64px.png}" data-toggle="tooltip"
+				data-placement="right" th:attr="title=#{tooltip.language.spanish}"
+				width="25" height="25" />
+			</a>
+
+
+		</div>
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+	<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</body>
+</html>

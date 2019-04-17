@@ -1,0 +1,142 @@
+html, body {
+	height: 100%;
+}
+
+body {
+	display: -ms-flexbox;
+	display: flex;
+	-ms-flex-align: center;
+	align-items: center;
+	padding-top: 40px;
+	padding-bottom: 40px;
+	background-color: white;
+}
+
+.form-signin {
+	width: 100%;
+	max-width: 500px;
+	padding: 15px;
+	margin: auto;
+}
+
+.form-signin .checkbox {
+	font-weight: 400;
+}
+
+.form-signin .form-control {
+	position: relative;
+	box-sizing: border-box;
+	height: auto;
+	padding: 10px;
+	font-size: 16px;
+}
+
+.form-signin .form-control:focus {
+	z-index: 2;
+}
+
+.form-signin input[type="email"] {
+	margin-bottom: -1px;
+	border-bottom-right-radius: 0;
+	border-bottom-left-radius: 0;
+}
+
+.form-signin input[type="password"] {
+	margin-bottom: 10px;
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+}
+
+.form-signin input[type="text"] {
+	margin-bottom: 10px;
+}
+
+.panel-default>.panel-heading-custom {
+	background-image: none;
+	background-color: #808080;
+	padding: 10px;
+	margin-bottom: 5px;
+	color: white;
+}
+
+.table-heading-custom {
+	background-color: #808080;
+	color: white;
+	margin-bottom: 5px;
+}
+
+.panel-border-custom {
+	border: 1px solid #808080;
+}
+
+.center-align {
+	text-align: center;
+}
+
+.right-align {
+	text-align: right;
+}
+
+.left-align {
+	text-align: left;
+}
+
+.main-container {
+	padding-top: 40px;
+	padding-bottom: 20px;
+}
+
+.justify-content-end {
+	justify-content: flex-end;
+}
+
+.borderless td, .borderless th {
+	border: none;
+}
+
+.control-label {
+	text-align: right;
+}
+
+.alert-popup-right {
+	position: fixed;
+	right: 0;
+	opacity: 0.9;
+	z-index: 4;
+}
+
+.opacity9 {
+	opacity: 0.9;
+}
+
+.notify-badge {
+	border-radius: 30px 30px 30px 30px;
+	color: white;
+	font-size: 10px;
+	padding: 4px 7px
+}
+
+.nounderline {
+	text-decoration: none !important
+}
+
+.header-card-custom {
+	background-color: #ffadad;
+}
+
+.body-card-custom {
+	background-color: #fce5e5;
+}
+
+.footer-card-custom {
+	background-color: #e5e5e5;
+}
+
+.custom-card {
+	z-index: 1;
+}
+
+.custom-collapse {
+	border: none;
+}
+}

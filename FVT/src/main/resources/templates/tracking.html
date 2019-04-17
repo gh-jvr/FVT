@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{default}">
+<head>
+<meta charset="UTF-8">
+<title th:text="#{title.trackings}"></title>
+
+</head>
+<body>
+	<div layout:fragment="content">
+
+		<!-- If there is no trackings... -->
+		<div class="container-flex center-align" th:if="${trackings == null}">
+			<div class="container-flex h1 mt-4 mb-4"
+				th:text="#{general.no.tracking}"></div>
+			<input type="image" th:src="@{/images/sputnik_256px.png}"
+				height="150px" width="150px">
+			<div class="container mt-5">
+				<a href="/tracking/createTracking">
+					<button type="button" class="btn btn-success"
+						th:text="#{button.create.new.tracking}"></button>
+				</a>
+			</div>
+		</div>
+
+		<!-- If there are trackings created... -->
+		<div th:if="${trackings != null}">
+
+			<!-- Add tracking button -->
+			<div class="container">
+				<a href="/tracking/createTracking"> <span data-toggle="tooltip"
+					data-placement="bottom" th:attr="title=#{tooltip.create.tracking}">
+						<img class="rounded float-right mb-2"
+						th:src="@{/images/add_64px.png}" width="40" height="40" />
+				</span></a>
+			</div>
+
+			<!-- Table of trackings -->
+			<div class="container">
+				<table class="table">
+					<thead class="table-heading-custom">
+						<tr class="d-flex">
+							<th class="col-7" scope="col" th:text="#{table.header.name}"></th>
+							<th class="col-2" scope="col" th:text="#{table.header.Alarms}"></th>
+							<th class="col-3 center-align" scope="col"
+								th:text="#{table.header.Operations}"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="d-flex" th:if="${trackings != null}"
+							th:each="tracking, iStat : ${trackings.content}">
+							<th class="col-7" scope="row" th:text="${tracking.trackingName}"></th>
+							<td class="col-2" th:if="${tracking.alarms != null}"
+								th:text="${#lists.size(tracking.alarms)}"></td>
+							<td class="col-2" th:if="${tracking.alarms == null}" th:text="0"></td>
+							<td class="col-3">
+								<div class="container form-inline justify-content-center">
+
+									<span data-toggle="tooltip" data-placement="bottom"
+										th:attr="title=#{tooltip.show.tracking}"> <input
+										type="image" src="/images/look_64px.png" data-toggle="modal"
+										th:attr="data-target='#showTrackingModal'+${tracking.id}"
+										width="25" height="25" />
+									</span>
+
+									<!-- Show tracking modal -->
+									<div class="modal fade"
+										th:attr="id='showTrackingModal'+${tracking.id}" tabindex="-1"
+										role="dialog" aria-hidden="true">
+										<div class="modal-dialog modal-dialog-centered modal-lg"
+											role="document">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title"
+														th:text="#{modal.header.show.tracking}"></h5>
+													<button type="button" class="close" data-dismiss="modal"
+														aria-label="Close">
+														<span aria-hidden="true">&times;</span>
+													</button>
+												</div>
+												<div class="modal-body">
+													<table class="table borderless">
+														<thead></thead>
+														<tbody>
+															<tr class="d-flex">
+																<th class="col-5" th:text="#{label.name}"></th>
+																<td class="col-7" th:text="${tracking.trackingName}"></td>
+															</tr>
+															<tr class="d-flex">
+																<th class="col-5" th:text="#{label.software.name}"></th>
+																<td class="col-7" th:text="${tracking.softwareName}"></td>
+															</tr>
+															<tr class="d-flex">
+																<th class="col-5" th:text="#{label.alarm.number}"></th>
+
+																<td class="col-7" th:if="${tracking.alarms != null}"
+																	th:text="${#lists.size(tracking.alarms)}"></td>
+
+																<td class="col-7" th:if="${tracking.alarms == null}"
+																	th:text="0"></td>
+															</tr>
+														</tbody>
+													</table>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<span data-toggle="tooltip" data-placement="bottom"
+										th:attr="title=#{tooltip.edit.tracking}"> <input
+										class="ml-1" type="image" src="/images/edit_64px.png"
+										data-toggle="modal"
+										th:attr="data-target='#editTrackingModal'+${tracking.id}"
+										width="25" height="25" />
+									</span>
+
+									<!-- Edit tracking modal -->
+									<div class="modal fade"
+										th:attr="id='editTrackingModal'+${tracking.id}" tabindex="-1"
+										role="dialog" aria-hidden="true">
+										<div class="modal-dialog modal-dialog-centered modal-lg"
+											role="document">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title"
+														th:text="#{modal.header.edit.tracking}"></h5>
+													<button type="button" class="close" data-dismiss="modal"
+														aria-label="Close">
+														<span aria-hidden="true">&times;</span>
+													</button>
+												</div>
+												<form
+													th:action="@{/tracking/edit/{id}(id=${tracking.id}, size=${trackings.size}, page=${trackings.number + 1})}"
+													method="post">
+													<div class="modal-body">
+														<table class="table borderless">
+															<thead></thead>
+															<tbody>
+																<tr class="d-flex">
+																	<th class="col-5" th:text="#{label.name}"></th>
+																	<td class="col-7"><input type="text"
+																		maxlength="200" required="required"
+																		class="form-control w-100" name="trackingName"
+																		th:value="${tracking.trackingName}"></td>
+																</tr>
+																<tr class="d-flex">
+																	<th class="col-5" th:text="#{label.software.name}"></th>
+																	<td class="col-7"><input type="text"
+																		maxlength="300" required="required"
+																		class="form-control w-100" name="softwareName"
+																		th:value="${tracking.softwareName}"></td>
+																</tr>
+															</tbody>
+														</table>
+													</div>
+													<div class="modal-footer">
+														<div class="container center-align">
+															<button type="submit" class="btn btn-outline-success"
+																th:text="#{button.save}"></button>
+														</div>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+
+									<!-- Remove tracking -->
+									<form class="formTrackings"
+										th:action="@{/tracking/remove/{id}(id=${tracking.id}, size=${trackings.size}, page=${trackings.number + 1})}"
+										th:object="${tracking}" method="post">
+										<input class="ml-1" type="image" src="/images/remove_64px.png"
+											alt="Submit Form" data-toggle="tooltip"
+											data-placement="right"
+											th:attr="title=#{tooltip.remove.tracking}" width="25"
+											height="25" />
+									</form>
+
+									<!-- Show tracking's alarm -->
+									<form class="formTrackings"
+										th:action="@{/alarms/{id}(id=${tracking.id})}"
+										th:object="${tracking}" method="post">
+										<input class="ml-5" type="image" src="/images/alarm_64px.png"
+											alt="Submit Form" data-toggle="tooltip"
+											data-placement="right"
+											th:attr="title=#{tooltip.alarms.tracking}" width="25"
+											height="25" />
+									</form>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<!-- Pagination buttons -->
+			<div class="container center-align mb-2"
+				th:if="${trackings.totalPages > 1}">
+				<!-- Previous button -->
+				<a class="page-link"
+					th:href="@{/tracking(size=${trackings.size}, page=${trackings.number})}"
+					th:class="${pageNumber==trackings.number} ? active"><button
+						th:disabled="${trackings.number < 1}" type="button"
+						class="btn btn-secondary" th:text="#{button.previous}"></button></a>
+
+				<!-- next button -->
+				<a class="page-link"
+					th:href="@{/tracking(size=${trackings.size}, page=${trackings.number + 2})}"
+					th:class="${pageNumber==trackings.number + 2} ? active"><button
+						th:disabled="${trackings.number + 2 > trackings.totalPages}"
+						type="button" class="btn btn-primary" th:text="#{button.next}"></button></a>
+			</div>
+		</div>
+
+		<!-- Footer -->
+		<div class="footer fixed-bottom right-align mb-4 mr-1">
+			<button type="button" class="btn btn-link p-0 ml-2"
+				th:text="#{button.help.title}" data-toggle="modal"
+				th:attr="data-target='#showTrackingHelp'"></button>
+		</div>
+
+		<!-- Show help modal -->
+		<div class="modal fade" th:attr="id='showTrackingHelp'" tabindex="-1"
+			role="dialog" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered modal-lg"
+				role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" th:text="#{modal.header.show.help}"></h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body left-align">
+						<table class="table borderless">
+							<thead></thead>
+							<tbody>
+								<tr class="d-flex">
+									<th class="col-12" th:text="#{label.help.initial.description}"></th>
+								</tr>
+								<tr class="d-flex">
+									<td class="col-12" th:text="#{label.help.comand.description }"></td>
+								</tr>
+								<tr class="d-flex">
+									<td class="col-12" th:text="#{label.help.comand.ubuntu}"></td>
+								</tr>
+								<tr class="d-flex">
+									<td class="col-12" th:text="#{label.help.comand.Windows}"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

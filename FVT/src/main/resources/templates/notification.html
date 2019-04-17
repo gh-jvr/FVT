@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{default}">
+<head>
+<title th:text="#{title.notification}"></title>
+</head>
+<body>
+	<div layout:fragment="content">
+
+		<!-- Remove all button -->
+		<div class="container-flex right-align" th:if="${notsPage != null}">
+			<a class="mr-3" th:href="@{/notification/removeAll}"><button
+					th:disabled="${notsPage.totalElements < 1}" type="button"
+					class="btn btn-danger" th:text="#{button.remove.all}"></button></a>
+		</div>
+
+		<!-- No notification container -->
+		<div class="container-flex center-align" th:if="${notsPage == null}">
+			<div class="container-flex h1 mt-4 mb-4"
+				th:text="#{general.no.notification}"></div>
+			<input type="image" th:src="@{/images/like_256px.png}" height="150px"
+				width="150px">
+		</div>
+
+		<!-- Notifications list -->
+		<div th:if="${notsPage != null}">
+
+			<!-- Previous and next buttons -->
+			<div class="container center-align mb-2"
+				th:if="${notsPage != null and notsPage.totalPages > 1}">
+
+				<!-- Previous button -->
+				<a class="page-link"
+					th:href="@{/notification(size=${notsPage.size}, page=${notsPage.number})}"
+					th:class="${pageNumber==notsPage.number} ? active"><button
+						th:disabled="${notsPage.number < 1}" type="button"
+						class="btn btn-secondary" th:text="#{button.previous}"></button></a>
+
+				<!-- next button -->
+				<a class="page-link"
+					th:href="@{/notification(size=${notsPage.size}, page=${notsPage.number + 2})}"
+					th:class="${pageNumber==notsPage.number + 2} ? active"><button
+						th:disabled="${notsPage.number + 2 > notsPage.totalPages}"
+						type="button" class="btn btn-primary" th:text="#{button.next}"></button></a>
+			</div>
+			<table class="table borderless">
+				<thead></thead>
+				<tbody>
+					<tr th:each="notification, iStat : ${notsPage.content}">
+						<th class="col-11" scope="row" th:if="${notsPage.totalPages > 0}">
+							<div class="card">
+								<div class="card-header header-card-custom"
+									th:text="${notification.vulnerability.name}"></div>
+								<div class="card-body body-card-custom pb-0">
+									<h5 class="card-title"
+										th:text="${notification.tracking.softwareName}"></h5>
+									<p class="card-text"
+										th:text="${notification.vulnerability.description}"></p>
+
+									<div class="row justify-content-end">
+										<button type="button" class="btn btn-info m-2"
+											th:text="#{button.see.vulnerability}" data-toggle="modal"
+											th:attr="data-target='#showNotifVulnerabilityModal'+${notification.vulnerability.id}"></button>
+
+										<!-- Show vulnerability modal -->
+										<div class="modal fade"
+											th:attr="id='showNotifVulnerabilityModal'+${notification.vulnerability.id}"
+											tabindex="-1" role="dialog" aria-hidden="true">
+											<div class="modal-dialog modal-dialog-centered modal-lg"
+												role="document">
+												<div class="modal-content">
+													<div class="modal-header">
+														<h5 class="modal-title"
+															th:text="#{modal.header.show.vulnerability}"></h5>
+														<button type="button" class="close" data-dismiss="modal"
+															aria-label="Close">
+															<span aria-hidden="true">&times;</span>
+														</button>
+													</div>
+													<div class="modal-body">
+														<table class="table borderless">
+															<thead></thead>
+															<tbody>
+																<tr class="d-flex">
+																	<th class="col-5" th:text="#{label.name}"></th>
+																	<td class="col-7"
+																		th:text="${notification.vulnerability.name}"></td>
+																</tr>
+																<tr class="d-flex">
+																	<th class="col-5" th:text="#{label.vul.sequence}"></th>
+																	<td class="col-7"
+																		th:text="${notification.vulnerability.seq}"></td>
+																</tr>
+																<tr class="d-flex">
+																	<th class="col-5" th:text="#{label.vul.description}"></th>
+																	<td class="col-7"
+																		th:text="${notification.vulnerability.description}"></td>
+																</tr>
+																<tr class="d-flex"
+																	th:if="${not #lists.isEmpty(notification.vulnerability.references)}">
+																	<th class="col-5" th:text="#{label.vul.refs.number}"></th>
+																	<td class="col-7"
+																		th:text="${#lists.size(notification.vulnerability.references)}"></td>
+																</tr>
+
+															</tbody>
+														</table>
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<form class="m-2"
+											th:action="@{/notification/remove/{id}(id=${notification.id})}"
+											th:object="${notification}" method="post">
+											<button type="submit" class="btn btn-danger"
+												th:text="#{button.remove}"></button>
+										</form>
+									</div>
+								</div>
+							</div>
+							<div
+								class="card-footer footer-card-custom text-muted pt-0 pb-0 right-align opacity9"
+								th:text="${notification.creationDate.toString().replace('T',' - ')}"></div>
+						</th>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</body>
+</html>

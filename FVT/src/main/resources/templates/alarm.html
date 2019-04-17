@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{default}">
+<head>
+<meta charset="UTF-8">
+<title th:text="#{title.alarms}"></title>
+
+</head>
+<body>
+	<div layout:fragment="content">
+
+		<!-- Add alarm button -->
+		<div class="container">
+			<a th:href="@{/alarms/createAlarm/{id}(id=${trackingId})}"> <span
+				data-toggle="tooltip" data-placement="bottom"
+				th:attr="title=#{tooltip.create.alarm}"> <img
+					class="rounded float-right mb-2" th:src="@{/images/add_64px.png}"
+					width="40" height="40" />
+			</span></a>
+		</div>
+
+		<!-- Table of alarms -->
+		<div class="container">
+			<table class="table">
+				<thead class="table-heading-custom">
+					<tr class="d-flex">
+						<th class="col-6" scope="col" th:text="#{table.header.name}"></th>
+						<th class="col-2" scope="col" th:text="#{table.header.period}"></th>
+						<th class="col-4 center-align" scope="col"
+							th:text="#{table.header.Operations}"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="d-flex" th:if="${not alarms.hasContent()}">
+						<td class="col-12 center-align" th:text="#{general.empty.table}"></td>
+					</tr>
+					<tr class="d-flex"
+						th:if="${alarms != null and alarms.hasContent()}"
+						th:each="alarm, iStat : ${alarms.content}">
+						<th class="col-6" scope="row" th:text="${alarm.alarmName}"></th>
+						<td class="col-2" th:text="${alarm.alarmPeriod}"></td>
+						<td class="col-4">
+							<div class="container form-inline justify-content-center">
+
+								<span data-toggle="tooltip" data-placement="bottom"
+									th:attr="title=#{tooltip.show.alarm}"> <input
+									type="image" src="/images/look_64px.png" data-toggle="modal"
+									th:attr="data-target='#showAlarmModal'+${alarm.id}" width="25"
+									height="25" />
+								</span>
+
+								<!-- Show Alarm modal -->
+								<div class="modal fade"
+									th:attr="id='showAlarmModal'+${alarm.id}" tabindex="-1"
+									role="dialog" aria-hidden="true">
+									<div class="modal-dialog modal-dialog-centered modal-lg"
+										role="document">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title" th:text="#{modal.header.show.alarm}"></h5>
+												<button type="button" class="close" data-dismiss="modal"
+													aria-label="Close">
+													<span aria-hidden="true">&times;</span>
+												</button>
+											</div>
+											<div class="modal-body">
+												<table class="table borderless">
+													<thead></thead>
+													<tbody>
+														<tr class="d-flex">
+															<th class="col-5" th:text="#{label.name}"></th>
+															<td class="col-7" th:text="${alarm.alarmName}"></td>
+														</tr>
+														<tr class="d-flex">
+															<th class="col-5" th:text="#{label.alarm.disabled}"></th>
+															<td th:if="${alarm.enabled}" class="col-7"
+																th:text="#{general.yes}"></td>
+															<td th:if="${not alarm.enabled}" class="col-7"
+																th:text="#{general.no}"></td>
+														</tr>
+														<tr class="d-flex">
+															<th class="col-5" th:text="#{label.alarm.email2}"></th>
+															<td th:if="${alarm.emailNotification}" class="col-7"
+																th:text="#{general.yes}"></td>
+															<td th:if="${not alarm.emailNotification}" class="col-7"
+																th:text="#{general.no}"></td>
+														</tr>
+														<tr class="d-flex">
+															<th class="col-5" th:text="#{label.alarm.period}"></th>
+															<td class="col-7" th:text="${alarm.alarmPeriod}"></td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<span data-toggle="tooltip" data-placement="bottom"
+									th:attr="title=#{tooltip.edit.alarm}"> <input
+									class="ml-1" type="image" src="/images/edit_64px.png"
+									data-toggle="modal"
+									th:attr="data-target='#editAlarmModal'+${alarm.id}" width="25"
+									height="25" />
+								</span>
+
+								<!-- Edit alarm modal -->
+								<div class="modal fade"
+									th:attr="id='editAlarmModal'+${alarm.id}" tabindex="-1"
+									role="dialog" aria-hidden="true">
+									<div class="modal-dialog modal-dialog-centered modal-lg"
+										role="document">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title" th:text="#{modal.header.edit.alarm}"></h5>
+												<button type="button" class="close" data-dismiss="modal"
+													aria-label="Close">
+													<span aria-hidden="true">&times;</span>
+												</button>
+											</div>
+											<form
+												th:action="@{/alarms/edit/{id}/{trackingId}(id=${alarm.id}, trackingId=${trackingId}, size=${alarms.size}, page=${alarms.number + 1})}"
+												method="post">
+												<div class="modal-body">
+													<table class="table borderless">
+														<thead></thead>
+														<tbody>
+															<tr class="d-flex">
+																<th class="col-3" th:text="#{label.name}"></th>
+																<td class="col-9"><input type="text"
+																	maxlength="200" class="form-control w-100"
+																	name="alarmName" required="required"
+																	th:value="${alarm.alarmName}"></td>
+															</tr>
+															<tr class="d-flex">
+																<th class="col-3"
+																	th:text="#{label.setting.alarm.period}"></th>
+																<td class="col-9"><select class="selectpicker"
+																	id="alarmPeriod" name="alarmPeriod"
+																	th:value="${alarm.alarmPeriod}">
+																		<option th:each="period: ${periods}"
+																			th:selected="${alarm.alarmPeriod == period}"
+																			th:value="${period}" th:text="${period}"></option>
+																</select></td>
+															</tr>
+															<tr class="d-flex">
+																<td><div class="form-check">
+																		<input type="checkbox" class="form-check-input"
+																			name="emailNotification"
+																			th:checked="${alarm.emailNotification}"> <label
+																			class="form-check-label" for="active"
+																			th:text="#{label.alarm.email2}"></label>
+																	</div></td>
+															</tr>
+														</tbody>
+													</table>
+												</div>
+												<div class="modal-footer">
+													<div class="container center-align">
+														<button type="submit" class="btn btn-outline-success"
+															th:text="#{button.save}"></button>
+													</div>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+
+								<!-- Remove alarm -->
+								<form
+									th:action="@{/alarms/remove/{id}/{trackingId}(id=${alarm.id}, trackingId=${trackingId}, size=${alarms.size}, page=${alarms.number + 1})}"
+									th:object="${alarm}" method="post">
+									<input class="ml-1" type="image" src="/images/remove_64px.png"
+										alt="Submit Form" data-toggle="tooltip" data-placement="right"
+										th:attr="title=#{tooltip.remove.alarm}" width="25" height="25" />
+								</form>
+
+								<!-- Enable alarm -->
+								<form class="col-6 right-align" th:if="${!alarm.enabled}"
+									th:action="@{/alarms/enable/{id}/{trackingId}/{enableDisable}(id=${alarm.id}, trackingId=${trackingId}, enableDisable=${true}, size=${alarms.size}, page=${alarms.number + 1})}"
+									th:object="${alarm}" method="post">
+
+									<button type="submit" class="btn btn-primary"
+										th:text="#{button.enable}"></button>
+								</form>
+
+								<!-- Disable alarm -->
+								<form class="col-6 right-align" th:if="${alarm.enabled}"
+									th:action="@{/alarms/enable/{id}/{trackingId}/{enableDisable}(id=${alarm.id}, trackingId=${trackingId}, enableDisable=false, size=${alarms.size}, page=${alarms.number + 1})}"
+									th:object="${alarm}" method="post">
+									<button type="submit" class="btn btn-secondary"
+										th:text="#{button.disable}"></button>
+								</form>
+							</div>
+
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<!-- scripts -->
+			<script type="text/javascript">
+				window.setTimeout(function() {
+					$(".alert-info").fadeTo(900, 0).slideUp(600, function() {
+						$(this).remove();
+					});
+				}, 8000);
+			</script>
+			<script type="text/javascript">
+				window.setTimeout(function() {
+					$(".alert-warning").fadeTo(900, 0).slideUp(600, function() {
+						$(this).remove();
+					});
+				}, 8000);
+			</script>
+			<script type="text/javascript">
+				window.setTimeout(function() {
+					$(".alert-danger").fadeTo(1200, 0).slideUp(900, function() {
+						$(this).remove();
+					});
+				}, 10000);
+			</script>
+		</div>
+
+		<!-- Pagination buttons -->
+		<div class="container center-align mb-2"
+			th:if="${alarms.totalPages > 1}">
+			<!-- Previous button -->
+			<a class="page-link"
+				th:href="@{/alarms/{id}(id=${trackingId}, size=${alarms.size}, page=${alarms.number})}"
+				th:class="${pageNumber==alarms.number} ? active"><button
+					th:disabled="${alarms.number < 1}" type="button"
+					class="btn btn-secondary" th:text="#{button.previous}"></button></a>
+
+			<!-- next button -->
+			<a class="page-link"
+				th:href="@{/alarms/{id}(id=${trackingId}, size=${alarms.size}, page=${alarms.number + 2})}"
+				th:class="${pageNumber==alarms.number + 2} ? active"><button
+					th:disabled="${alarms.number + 2 > alarms.totalPages}"
+					type="button" class="btn btn-primary" th:text="#{button.next}"></button></a>
+		</div>
+
+	</div>
+</body>
+</html>

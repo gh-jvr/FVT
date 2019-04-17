@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{default}">
+<head>
+<meta charset="UTF-8">
+<title th:text="#{title.settings}"></title>
+</head>
+<body>
+	<div layout:fragment="content">
+
+		<form th:action="@{/saveSetting}" method="post">
+
+			<!-- Email container -->
+			<div class="container w-75 p-1">
+				<div class="panel-group">
+					<div class="form-group">
+						<div class="panel panel-default panel-border-custom">
+							<div class="panel-heading panel-heading-custom"
+								th:text="#{panel.head.settings.cve}"></div>
+							<div class="panel-body m-2">
+
+								<!-- Email input -->
+								<label for="settingsEmail" th:text="#{label.setting.email}"></label>
+								<input type="text" class="form-control p-2" id="settingsEmail" maxlength="250"
+									th:attr="placeholder=#{placeholder.setting.email}"
+									th:value="${setting.email}" aria-describedby="emailHelp"
+									name="email"> <small id="emailHelp"
+									class="form-text text-muted"
+									th:text="#{general.setting.email.description}"></small>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Default alarm settings -->
+			<div class="container w-75 p-1">
+				<div class="panel-group">
+					<div class="form-group">
+						<div class="panel panel-default panel-border-custom">
+							<div class="panel-heading panel-heading-custom"
+								th:text="#{panel.head.settings.alarm}"></div>
+							<div class="panel-body m-2">
+
+								<div class="panel-body m-2">
+									<div class="form-check">
+										<input type="checkbox" class="form-check-input" id="active"
+											th:checked="${defaultAlarm.enabled}" name="enabled">
+										<label class="form-check-label" for="active"
+											th:text="#{label.alarm.disabled}"></label>
+									</div>
+									<div class="form-check">
+										<input type="checkbox" class="form-check-input" id="email"
+											th:checked="${defaultAlarm.emailNotification}"
+											name="emailNotification"> <label
+											class="form-check-label" for="email"
+											th:text="#{label.alarm.email}"></label>
+									</div>
+								</div>
+
+								<!-- Alarm name -->
+								<label for="alarmNameId"
+									th:text="#{label.setting.default.alarm.name}"></label> <input maxlength="200"
+									type="text" id="alarmNameId" aria-describedby="alarmNameHelp"
+									class="form-control p-2" th:value="${defaultAlarm.alarmName}"
+									th:attr="placeholder=#{placeholder.alarm.default.name}"
+									name="alarmName"> <small id="alarmNameHelp"
+									class="form-text text-muted"
+									th:text="#{general.setting.alarm.name.description}"></small>
+
+								<!-- Alarm period -->
+								<div class="container mt-3">
+									<div class="row">
+										<label for="alarmPeriodId"
+											th:text="#{label.setting.default.alarm.period}"></label>
+									</div>
+									<div class="row">
+										<select id="alarmPeriodId" aria-describedby="alarPeriodHelp" class="selectpicker"
+											th:field="*{defaultAlarm.alarmPeriod}"
+											th:value="${defaultAlarm.alarmPeriod}">
+											<option th:each="period: ${periods}" th:value="${period}"
+												th:text="${period}"></option>
+										</select>
+										<label class="ml-2 mt-1" for="alarmPeriodId"
+											th:text="#{label.hours}"></label>
+									</div>
+									<div class="row">
+										<small id="alarPeriodHelp" class="form-text text-muted"
+											th:text="#{general.setting.alarm.period.description}"></small>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Submit button -->
+			<div class="container center-align">
+				<button type="submit" class="btn btn-outline-success"
+					th:text="#{button.update.settings}"></button>
+			</div>
+		</form>
+
+		<!-- Remove default alarm button -->
+		<form th:action="@{/removeDefaultAlarm}" method="post"
+			th:if="${defaultAlarm.id != null}">
+			<div class="container center-align mt-3">
+				<button type="submit" class="btn btn-outline-danger"
+					th:text="#{button.remove.default.alarm}"></button>
+			</div>
+		</form>
+
+	</div>
+</body>
+</html>

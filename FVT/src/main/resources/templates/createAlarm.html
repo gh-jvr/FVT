@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{default}">
+<head>
+<meta charset="UTF-8">
+<title th:text="#{title.alarms}"></title>
+
+</head>
+<body>
+	<div layout:fragment="content">
+
+		<!-- Default setting button -->
+		<div class="container w-50 p-1 right-align">
+			<form
+				th:action="@{/alarms/createAlarm/defaultAlarm/{trackingId}(trackingId=${trackingId})}"
+				th:object="${alarm}" method="post">
+				<button type="submit" class="btn btn-info"
+					th:text="#{button.default.alarm}"></button>
+			</form>
+		</div>
+
+		<form th:action="@{/alarms/createAlarm/{id}(id=${trackingId})}"
+			method="post">
+
+			<!-- General data panel -->
+			<div class="container w-50 p-1">
+				<div class="panel-group">
+					<div class="form-group">
+						<div class="panel panel-default panel-border-custom">
+							<div class="panel-heading panel-heading-custom"
+								th:text="#{panel.head.alarm.general}"></div>
+							<div class="panel-body m-2">
+								<input type="text" class="form-control p-2 mb-2" maxlength="200"
+									th:attr="placeholder=#{placeholder.alarm.name}"
+									required="required" name="alarmName"
+									th:value="${defaultAlarm.alarmName}">
+								<div class="form-check">
+									<input type="checkbox" class="form-check-input" id="active"
+										name="enabled" th:checked="${defaultAlarm.enabled}"> <label
+										class="form-check-label" for="active"
+										th:text="#{label.alarm.disabled}"></label>
+								</div>
+								<div class="form-check">
+									<input type="checkbox" class="form-check-input" id="email"
+										name="emailNotification"
+										th:checked="${defaultAlarm.emailNotification}"> <label
+										class="form-check-label" for="email"
+										th:text="#{label.alarm.email}"></label>
+								</div>
+								<label class="mt-2" for="alarmPeriod"
+									th:text="#{label.setting.default.alarm.period}"></label> <select
+									class="selectpicker" id="alarmPeriod" name="alarmPeriod"
+									th:value="${defaultAlarm.alarmPeriod}">
+									<option th:each="period: ${periods}" th:value="${period}"
+										th:text="${period}"
+										th:selected="${defaultAlarm.alarmPeriod == period}"></option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Submit button -->
+			<div class="container center-align">
+				<button type="submit" class="btn btn-outline-success"
+					th:text="#{button.create}"></button>
+			</div>
+		</form>
+
+		<!-- scripts -->
+		<script type="text/javascript">
+			window.setTimeout(function() {
+				$(".alert-info").fadeTo(900, 0).slideUp(600, function() {
+					$(this).remove();
+				});
+			}, 8000);
+		</script>
+		<script type="text/javascript">
+			window.setTimeout(function() {
+				$(".alert-warning").fadeTo(900, 0).slideUp(600, function() {
+					$(this).remove();
+				});
+			}, 8000);
+		</script>
+
+		<script type="text/javascript">
+			window.setTimeout(function() {
+				$(".alert-danger").fadeTo(1200, 0).slideUp(900, function() {
+					$(this).remove();
+				});
+			}, 10000);
+		</script>
+	</div>
+</body>
+</html>

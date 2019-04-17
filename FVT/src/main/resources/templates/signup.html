@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{default}">
+<head>
+<title th:text="#{title.signup}"></title>
+</head>
+<body>
+	<div layout:fragment="content">
+
+		<form class="form-signin" th:action="@{/signup}" method="post">
+			<h1 class="h3 mb-3 font-weight-normal center-align"
+				th:text="#{general.signup}"></h1>
+			<div th:if="${param.logout}" th:text="#{general.loggedout}"></div>
+			<label for="inputUsername" class="sr-only"
+				th:text="#{label.username}"></label> <input type="email" maxlength="200"
+				name="email" id="inputEmail" class="form-control"
+				th:attr="placeholder=#{placeholder.email}" required="required"
+				th:disabled="${currentUser != null}" /> <label for="inputPassword"
+				class="sr-only" th:text="#{label.password}"></label> <input maxlength="200"
+				type="password" name="password" id="inputPassword"
+				class="form-control" th:attr="placeholder=#{placeholder.password}"
+				aria-describedby="passwordHelpMessage" required="required"
+				th:disabled="${currentUser != null}" /> <small
+				id="passwordHelpMessage" class="form-text text-muted"
+				th:text="#{general.help.password}"></small> <label
+				for="inputFullname" class="sr-only" th:text="#{label.fullname}"></label>
+			<input type="text" name="fullname" id="inputEmail" maxlength="200"
+				class="form-control mt-4"
+				th:attr="placeholder=#{placeholder.fullname}" required="required"
+				th:disabled="${currentUser != null}" />
+			<button class="btn btn-lg btn-primary btn-block" type="submit"
+				th:text="#{button.signup}" th:disabled="${currentUser != null}"></button>
+		</form>
+		<form class="form-signin" th:action="@{/login}" method="get">
+			<button class="btn btn-md btn-success btn-block" type="Submit"
+				th:text="#{button.signin}" th:disabled="${currentUser != null}"></button>
+		</form>
+	</div>
+</body>
+</html>

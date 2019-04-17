@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{default}">
+<head>
+<title th:text="#{title.dashboard}"></title>
+<script type="text/javascript"
+	src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body>
+	<div layout:fragment="content">
+
+		<!-- General statistics container -->
+		<div class="container w-50 p-1">
+			<div class="panel-group">
+				<div class="form-group">
+					<div class="panel panel-default panel-border-custom">
+						<div class="panel-heading panel-heading-custom"
+							th:text="#{panel.head.dashboard.general.statistics}"></div>
+						<div class="panel-body m-2 center-align">
+							<!-- KPI 2 -->
+							<label class="mb-0" for="kpi2Id"
+								th:text="#{label.dashboard.kpi2}"></label>
+							<p id="kpi2Id">
+								<em th:text="${kpi2}"></em>
+							</p>
+
+							<!-- KPI 3 -->
+							<label class="mb-0" for="kpi3Id"
+								th:text="#{label.dashboard.kpi3}"></label>
+							<p id="kpi3Id">
+								<em th:text="${kpi3}"></em>
+							</p>
+
+							<!-- KPI 4 -->
+							<label class="mb-0" for="kpi4Id"
+								th:text="#{label.dashboard.kpi4}"></label>
+							<p id="kpi4Id">
+								<em th:text="${kpi4}"></em>
+							</p>
+
+							<!-- KPI 5 -->
+							<label class="mb-0" for="kpi5Id"
+								th:text="#{label.dashboard.kpi5}"></label>
+							<p id="kpi5Id">
+								<em th:text="${kpi5}"></em>
+							</p>
+
+							<!-- KPI 6 -->
+							<label class="mb-0" for="kpi6Id"
+								th:text="#{label.dashboard.kpi6}"></label>
+							<p id="kpi6Id">
+								<em th:text="${#lists.size(kpi6)}"></em>
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Vulnerabilities list -->
+		<div class="container w-25 p-1">
+			<p class="center-align">
+				<a class="btn btn-primary"
+					th:if="${kpi1 != null and not #lists.isEmpty(kpi1)}"
+					data-toggle="collapse" href="#vulnerabilitiesCollapse"
+					role="button" aria-expanded="false"
+					aria-controls="vulnerabilitiesCollapse"
+					th:text="#{button.dashboard.vuls.collapse}"></a>
+			</p>
+			<div class="row">
+				<div class="col">
+					<div class="collapse multi-collapse center-align"
+						id="vulnerabilitiesCollapse">
+						<div class="card card-body custom-collapse p-0"
+							th:if="${kpi1 != null}">
+							<div th:each="vul : ${kpi1}">
+								<button type="button" class="btn btn-link p-0"
+									th:text="${vul.name}" data-toggle="modal"
+									th:attr="data-target='#showVulnerabilityModal'+${vul.id}"></button>
+
+								<!-- Show vulnerability modal -->
+								<div class="modal fade"
+									th:attr="id='showVulnerabilityModal'+${vul.id}" tabindex="-1"
+									role="dialog" aria-hidden="true">
+									<div class="modal-dialog modal-dialog-centered modal-lg"
+										role="document">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title"
+													th:text="#{modal.header.show.vulnerability}"></h5>
+												<button type="button" class="close" data-dismiss="modal"
+													aria-label="Close">
+													<span aria-hidden="true">&times;</span>
+												</button>
+											</div>
+											<div class="modal-body left-align">
+												<table class="table borderless">
+													<thead></thead>
+													<tbody>
+														<tr class="d-flex">
+															<th class="col-5" th:text="#{label.name}"></th>
+															<td class="col-7" th:text="${vul.name}"></td>
+														</tr>
+														<tr class="d-flex">
+															<th class="col-5" th:text="#{label.vul.sequence}"></th>
+															<td class="col-7" th:text="${vul.seq}"></td>
+														</tr>
+														<tr class="d-flex">
+															<th class="col-5" th:text="#{label.vul.description}"></th>
+															<td class="col-7" th:text="${vul.description}"></td>
+														</tr>
+														<tr class="d-flex"
+															th:if="${not #lists.isEmpty(vul.references)}">
+															<th class="col-5" th:text="#{label.vul.refs.number}"></th>
+															<td class="col-7"
+																th:text="${#lists.size(vul.references)}"></td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Chart KPI 7. Pie -->
+		<script type="text/javascript" th:inline="javascript">
+			google.charts.load('current', {
+				'packages' : [ 'corechart' ]
+			});
+			google.charts.setOnLoadCallback(drawChart);
+
+			function drawChart() {
+				var dt = /*[[${dataKpi7}]]*/;
+				 var data = google.visualization.arrayToDataTable(dt);
+				var options = {
+					legend: 'none',
+					pieSliceText: 'label',
+					backgroundColor: { fill:'transparent'},
+					chartArea: {width:'185'},
+					chartArea: {height:'185'}
+				};
+				var chart = new google.visualization.PieChart(document
+						.getElementById('kpi7PieId'));
+				chart.draw(data, options);
+			}
+		</script>
+		<div
+			th:if="${dataKpi7 != null and dashboard.kpi7 and dashboard.chartOptionKpi7 == 'Pie'}"
+			id="kpi7PieId" class="container center-align"></div>
+
+		<!-- Chart KPI 7. Line -->
+		<script type="text/javascript" th:inline="javascript">
+			google.charts.load('current', {
+				'packages' : [ 'corechart' ]
+			});
+			google.charts.setOnLoadCallback(drawChart);
+
+			function drawChart() {
+				var dt = /*[[${dataKpi7}]]*/;
+				 var data = google.visualization.arrayToDataTable(dt);
+				var options = {
+					title: /*[[#{chart.kpi7.notification.number.title}]]*/,
+					curveType: 'function',
+				    legend: { position: 'bottom' },
+					backgroundColor: { fill:'transparent'}
+				};
+				var chart = new google.visualization.LineChart(document
+						.getElementById('kpi7LineId'));
+				chart.draw(data, options);
+			}
+		</script>
+		<div
+			th:if="${dataKpi7 != null and dashboard.kpi7 and dashboard.chartOptionKpi7 == 'Line'}"
+			id="kpi7LineId" class="container center-align"></div>
+
+		<!-- Chart KPI 7. Bar -->
+		<script type="text/javascript" th:inline="javascript">
+			google.charts.load('current', {
+				'packages' : [ 'corechart' ]
+			});
+			google.charts.setOnLoadCallback(drawChart);
+
+			function drawChart() {
+				var dt = /*[[${dataKpi7}]]*/;
+				 var data = google.visualization.arrayToDataTable(dt);
+				var options = {
+					title: /*[[#{chart.kpi7.notification.number.title}]]*/,
+					legend: { position: 'bottom' },
+					hAxis: {  minValue: 0 },
+					bars: 'horizontal',
+			          axes: {
+			            x: {
+			              0: { side: 'top'}
+			            }
+			          },
+			        bar: { groupWidth: "90%" },
+					backgroundColor: { fill:'transparent'}
+				};
+				var chart = new google.visualization.BarChart(document
+						.getElementById('kpi7BarId'));
+				chart.draw(data, options);
+			}
+		</script>
+		<div
+			th:if="${dataKpi7 != null and dashboard.kpi7 and dashboard.chartOptionKpi7 == 'Bar'}"
+			id="kpi7BarId" class="container center-align"></div>
+
+		<!-- Chart KPI 8. Pie -->
+		<script type="text/javascript" th:inline="javascript">
+			google.charts.load('current', {
+				'packages' : [ 'corechart' ]
+			});
+			google.charts.setOnLoadCallback(drawChart);
+
+			function drawChart() {
+				var dt = /*[[${dataKpi8}]]*/;
+				 var data = google.visualization.arrayToDataTable(dt);
+				var options = {
+					legend: 'none',
+					pieSliceText: 'label',
+					backgroundColor: { fill:'transparent'},
+					chartArea: {width:'185'},
+					chartArea: {height:'185'}
+				};
+				var chart = new google.visualization.PieChart(document
+						.getElementById('kpi8PieId'));
+				chart.draw(data, options);
+			}
+		</script>
+		<div
+			th:if="${dataKpi8 != null  and dashboard.kpi8 and dashboard.chartOptionKpi8 == 'Pie'}"
+			id="kpi8PieId" class="container center-align"></div>
+
+		<!-- Chart KPI 8. Line -->
+		<script type="text/javascript" th:inline="javascript">
+			google.charts.load('current', {
+				'packages' : [ 'corechart' ]
+			});
+			google.charts.setOnLoadCallback(drawChart);
+
+			function drawChart() {
+				var dt = /*[[${dataKpi8}]]*/;
+				 var data = google.visualization.arrayToDataTable(dt);
+				var options = {
+					title: /*[[#{chart.kpi8.vulnerabilities.number.title}]]*/,
+					curveType: 'function',
+				    legend: { position: 'bottom' },
+					backgroundColor: { fill:'transparent'}
+				};
+				var chart = new google.visualization.LineChart(document
+						.getElementById('kpi8LineId'));
+				chart.draw(data, options);
+			}
+		</script>
+		<div
+			th:if="${dataKpi8 != null  and dashboard.kpi8 and dashboard.chartOptionKpi8 == 'Line'}"
+			id="kpi8LineId" class="container center-align"></div>
+
+		<!-- Chart KPI 8. Bar -->
+		<script type="text/javascript" th:inline="javascript">
+			google.charts.load('current', {
+				'packages' : [ 'corechart' ]
+			});
+			google.charts.setOnLoadCallback(drawChart);
+
+			function drawChart() {
+				var dt = /*[[${dataKpi8}]]*/;
+				 var data = google.visualization.arrayToDataTable(dt);
+				var options = {
+					title: /*[[#{chart.kpi8.vulnerabilities.number.title}]]*/,
+					legend: { position: 'bottom' },
+					hAxis: {  minValue: 0 },
+					bars: 'horizontal',
+			          axes: {
+			            x: {
+			              0: { side: 'top'}
+			            }
+			          },
+			        bar: { groupWidth: "90%" },
+					backgroundColor: { fill:'transparent'}
+				};
+				var chart = new google.visualization.BarChart(document
+						.getElementById('kpi8BarId'));
+				chart.draw(data, options);
+			}
+		</script>
+		<div
+			th:if="${dataKpi8 != null and dashboard.kpi8 and dashboard.chartOptionKpi8 == 'Bar'}"
+			id="kpi8BarId" class="container center-align"></div>
+
+
+		<!-- Dashboard setting footer -->
+		<div class="footer fixed-bottom mb-4">
+			<div class="container-flex right-align pr-2 mb-2">
+				<span data-toggle="tooltip" data-placement="left"
+					th:attr="title=#{tooltip.dashboard.setting}"> <input
+					class="ml-1" type="image" th:src="@{/images/setting_64px.png}"
+					data-toggle="modal" th:attr="data-target='#dashboardSetting'"
+					width="30" height="30" />
+				</span>
+			</div>
+		</div>
+
+		<!-- Dashboard modal setting -->
+		<div class="modal fade" th:attr="id='dashboardSetting'" tabindex="-1"
+			role="dialog" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered modal-lg"
+				role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title"
+							th:text="#{modal.header.dashboard.setting}"></h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<form th:action="@{/dashboard/save}" method="post">
+						<div class="modal-body">
+							<table class="table borderless">
+								<thead></thead>
+								<tbody>
+
+									<!-- KPI 7 -->
+									<tr class="d-flex">
+										<th class="col-12 p-0 center-align"
+											th:text="#{label.enable.kpi7}"></th>
+									</tr>
+									<tr class="d-flex">
+										<td class="col-12 p-1"><div class="form-check">
+												<input type="checkbox" class="form-check-input" name="kpi7"
+													th:checked="${dashboard.kpi7}"> <label
+													class="form-check-label" for="active"
+													th:text="#{label.check.kpi7}"></label>
+											</div></td>
+									</tr>
+									<tr class="d-flex">
+										<td class="col-4 p-1"><div
+												class="form-check form-check-inline">
+												<input class="form-check-input" type="radio"
+													name="lineOptionKpi7" id="lineRadioOptionKpi7Id"
+													th:field="${dashboard.chartOptionKpi7}" value="Line">
+												<label class="form-check-label" for="lineRadioOptionKpi7Id"
+													th:text="#{label.lines.chart}"></label>
+											</div></td>
+										<td class="col-4 p-1">
+											<div class="form-check form-check-inline">
+												<input class="form-check-input" type="radio"
+													name="barsOptionKpi7" id="barsRadioOptionKpi7Id"
+													th:field="${dashboard.chartOptionKpi7}" value="Bar">
+												<label class="form-check-label" for="barsRadioOptionKpi7Id"
+													th:text="#{label.bar.chart}"></label>
+											</div>
+										</td>
+										<td class="col-4 p-1">
+											<div class="form-check form-check-inline">
+												<input class="form-check-input" type="radio"
+													name="pieOptionKpi7" id="pieRadioOptionKpi7Id"
+													th:field="${dashboard.chartOptionKpi7}" value="Pie">
+												<label class="form-check-label" for="pieRadioOptionKpi7Id"
+													th:text="#{label.pie.chart}"></label>
+											</div>
+										</td>
+									</tr>
+
+									<!-- KPI 8 -->
+									<tr class="d-flex mt-5">
+										<th class="col-12 p-0 center-align"
+											th:text="#{label.enable.kpi8}"></th>
+									</tr>
+									<tr class="d-flex">
+										<td class="col-12 p-1"><div class="form-check">
+												<input type="checkbox" class="form-check-input" name="kpi8"
+													th:checked="${dashboard.kpi8}"> <label
+													class="form-check-label" for="active"
+													th:text="#{label.check.kpi8}"></label>
+											</div></td>
+									</tr>
+									<tr class="d-flex">
+										<td class="col-4 p-1"><div
+												class="form-check form-check-inline">
+												<input class="form-check-input" type="radio"
+													name="lineOptionKpi8" id="lineRadioOptionKpi8Id"
+													th:field="${dashboard.chartOptionKpi8}" value="Line">
+												<label class="form-check-label" for="lineRadioOptionKpi8Id"
+													th:text="#{label.lines.chart}"></label>
+											</div></td>
+										<td class="col-4 p-1">
+											<div class="form-check form-check-inline">
+												<input class="form-check-input" type="radio"
+													name="barsOptionKpi8" id="barsRadioOptionKpi8Id"
+													th:field="${dashboard.chartOptionKpi8}" value="Bar">
+												<label class="form-check-label" for="barsRadioOptionKpi8Id"
+													th:text="#{label.bar.chart}"></label>
+											</div>
+										</td>
+										<td class="col-4 p-1">
+											<div class="form-check form-check-inline">
+												<input class="form-check-input" type="radio"
+													name="pieOptionKpi8" id="pieRadioOptionKpi8Id"
+													th:field="${dashboard.chartOptionKpi8}" value="Pie">
+												<label class="form-check-label" for="pieRadioOptionKpi8Id"
+													th:text="#{label.pie.chart}"></label>
+											</div>
+										</td>
+									</tr>
+
+								</tbody>
+							</table>
+						</div>
+						<div class="modal-footer">
+							<div class="container center-align">
+								<button type="submit" class="btn btn-outline-success"
+									th:text="#{button.save}"></button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{default}">
+<head>
+<title th:text="#{title.home}"></title>
+</head>
+<body>
+	<div layout:fragment="content">
+		<div class="container-flex">
+			<ul class="list-inline p-2">
+
+				<!-- Attributions -->
+				<li class="font-weight-bold h3 list-item text-justify"
+					th:text="#{copyright.attributions}"></li>
+				<li class="list-item text-justify h6"
+					th:text="#{copyright.attributions.1}"></li>
+				<li class="list-item text-justify h6"
+					th:text="#{copyright.attributions.2}"></li>
+				<li class="list-item text-justify h6"
+					th:text="#{copyright.attributions.3}"></li>
+
+				<!-- License -->
+				<li class="font-weight-bold h3 list-item text-justify mt-4"
+					th:text="#{copyright.license}"></li>
+				<li class="list-item text-justify h6"
+					th:text="#{copyright.license.1}"></li>
+				<li class="list-item text-justify h6"
+					th:text="#{copyright.license.2}"></li>
+				<li class="list-inline-item text-justify h6 mr-0"
+					th:text="#{copyright.license.3}"></li>
+				<li class="list-inline-item text-justify h6"><a class="h5"
+					th:href="@{#{copyright.license.5}}">
+						<button type="button" class="btn btn-link p-0"
+							th:text="#{copyright.license.4}"></button>
+				</a></li>
+
+			</ul>
+		</div>
+	</div>
+</body>
+</html>

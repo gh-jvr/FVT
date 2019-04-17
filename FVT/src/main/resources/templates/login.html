@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{default}">
+<head>
+<title th:text="#{title.login}"></title>
+</head>
+<body class="text-center">
+	<div layout:fragment="content">
+		<form class="form-signin" th:action="@{/login}" method="post">
+			<h1 class="h3 mb-3 font-weight-normal" th:text="#{general.signin}"></h1>
+			<label for="inputEmail" class="sr-only" th:text="#{label.email}"></label>
+			<input type="email" name="email" id="inputEmail" class="form-control"
+				maxlength="200" th:disabled="${currentUser != null}"
+				th:attr="placeholder=#{placeholder.email}" required="required" /> <label
+				for="inputPassword" class="sr-only" th:text="#{label.password}"></label>
+			<input type="password" name="password" id="inputPassword"
+				th:disabled="${currentUser != null}" class="form-control"
+				th:attr="placeholder=#{placeholder.password}" maxlength="200"
+				required="required" />
+			<button class="btn btn-lg btn-primary btn-block" type="submit"
+				th:disabled="${currentUser != null}" th:text="#{button.signin}"></button>
+		</form>
+		<form class="form-signin" th:action="@{/signup}" method="get">
+			<button class="btn btn-md btn-success btn-block" type="Submit"
+				th:text="#{button.signup}" th:disabled="${currentUser != null}"></button>
+		</form>
+	</div>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{default}">
+<head>
+<title th:text="#{title.home}"></title>
+</head>
+<body>
+	<div layout:fragment="content">
+		<div class="container-flex center-align">
+			<h1 class="mb-4 font-weight-bold"
+				th:text="#{general.welcome.message}"></h1>
+			<ul class="list-inline h5 font-italic">
+				<li class="list-inline-item col-7 mb-2"
+					th:text="#{general.home.description}"></li>
+				<li class="list-inline-item col-7 m-3"><img
+					th:src="@{/images/fvt/fvt_512px.png}" height="150px" width="150px" /></li>
+				<li class="list-inline-item col-7 mb-4"><a
+					th:href="@{/home/extraInfo}"><button type="button"
+							class="btn btn-outline-secondary mr-4" th:text="#{button.more.info}"></button></a>
+					<a th:href="@{/login}"><button type="button"  th:disabled="${currentUser != null}"
+							class="btn btn-outline-primary" th:text="#{button.access}"></button></a></li>
+			</ul>
+		</div>
+	</div>
+</body>
+</html>

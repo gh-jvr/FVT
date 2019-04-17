@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{default}">
+<head>
+<meta charset="UTF-8">
+<title th:text="#{title.trackings}"></title>
+
+</head>
+<body>
+
+	<div layout:fragment="content">
+
+		<form th:action="@{/tracking/createTracking}" method="post">
+
+			<!-- Software module -->
+			<div class="container w-50 p-1">
+				<div class="panel-group">
+					<div class="form-group">
+						<div class="panel panel-default panel-border-custom">
+							<div class="panel-heading panel-heading-custom"
+								th:text="#{panel.head.software}"></div>
+							<div class="panel-body m-2">
+
+								<!-- Tracking name -->
+								<label for="trackingNameId" th:text="#{label.tracking.name}"></label>
+								<input id="trackingNameId" type="text"
+									class="form-control p-2 mb-2" maxlength="200"
+									th:attr="placeholder=#{placeholder.tracking.name}"
+									th:value="${trackingName}" name="trackingName"
+									required="required" aria-describedby="trackingNameHelp">
+								<small id="trackingNameHelp" class="form-text text-muted mb-4"
+									th:text="#{general.tracking.name.description}"></small>
+
+								<!-- Software name -->
+								<label for="softwareNameId" th:text="#{label.software.name}"></label>
+								<input id="softwareNameId" type="text" class="form-control p-2"
+									maxlength="300"
+									th:attr="placeholder=#{placeholder.software.name}"
+									th:value="${softwareName}" required="required"
+									name="softwareName" aria-describedby="softwareNameHelp">
+								<small id="softwareNameHelp" class="form-text text-muted"
+									th:text="#{general.software.name.description}"></small>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="container center-align">
+				<button type="submit" class="btn btn-outline-success"
+					th:text="#{button.create}"></button>
+			</div>
+		</form>
+
+		<!-- Footer -->
+		<div class="footer fixed-bottom right-align mb-4 mr-1">
+			<button type="button" class="btn btn-link p-0 ml-2"
+				th:text="#{button.help.title}" data-toggle="modal"
+				th:attr="data-target='#showTrackingHelp'"></button>
+		</div>
+
+		<!-- Show help modal -->
+		<div class="modal fade" th:attr="id='showTrackingHelp'" tabindex="-1"
+			role="dialog" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered modal-lg"
+				role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" th:text="#{modal.header.show.help}"></h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body left-align">
+						<table class="table borderless">
+							<thead></thead>
+							<tbody>
+								<tr class="d-flex">
+									<th class="col-12" th:text="#{label.help.initial.description}"></th>
+								</tr>
+								<tr class="d-flex">
+									<td class="col-12" th:text="#{label.help.comand.description }"></td>
+								</tr>
+								<tr class="d-flex">
+									<td class="col-12" th:text="#{label.help.comand.ubuntu}"></td>
+								</tr>
+								<tr class="d-flex">
+									<td class="col-12" th:text="#{label.help.comand.Windows}"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
